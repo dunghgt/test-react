@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <canvas id="canvas" width="500" height="500" style="background: black; margin-left: 300px;"></canvas>
+    <script type="text/javascript">
+      let canvas;
+      let ctx;
+      let shipX = 1;
+      let shipY = 1;
+      let moveX = 0;
+      let moveY = 0;
+      let enemy1X = 4;
+      let enemy1Y = 0;
+      let moveEnemy1X = 0;
+      let moveEnemy1Y = 0;
+      let enemy2X = 3;
+      let enemy2Y = 3;
+      let moveEnemy2X = 0;
+      let moveEnemy2Y = 0;
+      let islandX = 2;
+      let islandY = 2;
+
+      let w = 0;
+      let h = 25;
+
+      let count = 0;
+
+      const gs = 100;
+      const ms = 5;
+
+      window.onload = function() {
+        canvas = document.getElementById("canvas");
+        ctx = canvas.getContext("2d");
+        document.addEventListener("keydown", keyPush);
+        setInterval(function() {
+          finish();
+          moveThing();
+          drawThing();
+          moveX = 0; moveY = 0;
+          moveEnemy1X = 0; moveEnemy1Y = 0;
+          moveEnemy2X = 0; moveEnemy2Y = 0;
+        }, 20);
+      }
+
+      function drawColor(x, y, width, height, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, width, height);
+      }
+
+      function drawThing() {
+        drawColor(0, 0, ms * gs, ms * gs, "black");
+        let grd = "red";
+        drawColor(shipX * gs + w, shipY * gs + h, gs - 2*w, gs - 2*h, grd);
+        drawColor(enemy1X * gs, enemy1Y * gs, gs, gs, "green");
+        drawColor(enemy2X * gs, enemy2Y * gs, gs, gs, "green");
+        drawColor(islandX * gs, islandY * gs, gs, gs, "yellow");
+      }
+
+      function keyPush(event) {
+        if (shipX < enemy1X) {
+          moveEnemy1X = -1; moveEnemy1Y = 0;
+        }else if (shipX > enemy1X) {
+          moveEnemy1X = 1; moveEnemy1Y = 0;
+        }else {
+          if (shipY < enemy1Y) {
+            moveEnemy1X = 0; moveEnemy1Y = -1;
+          }else if (shipY > enemy1Y){
+            moveEnemy1X = 0; moveEnemy1Y = 1;
+          }else {
+            console.log("You lose!!!");
+          }
+        }
+        if (shipX < enemy2X) {
+          moveEnemy2X = -1; moveEnemy2Y = 0;
+        }else if (shipX > enemy2X) {
+          moveEnemy2X = 1; moveEnemy2Y = 0;
+        }else {
+          if (shipY < enemy2Y) {
+            moveEnemy2X = 0; moveEnemy2Y = -1;
+          }else if (shipY > enemy2Y){
+            moveEnemy2X = 0; moveEnemy2Y = 1;
+          }else {
+            console.log("You lose!!!");
+          }
+        }
+        switch (event.keyCode) {
+          case 37:
+            moveX = -1; moveY = 0;
+            count = 1;
+            break;
+          case 38:
+            moveX = 0; moveY = -1;
+            count = 2;
+            break;
+          case 39:
+            moveX = 1; moveY = 0;
+            count = 1;
+            break;
+          case 40:
+            moveX = 0; moveY = 1;
+            count = 2;
+            break;
+          case 70:
+            if (count == 2) {
+              if (shipY == enemy1Y) {
+                moveEnemy1X = -1000000;
+              }
+              if (shipY == enemy2Y) {
+                moveEnemy2X = -1000000;
+              }
+            }
+            else if (count == 1) {
+              if (shipX == enemy1X) {
+                moveEnemy1X = -1000000;
+              }
+              if (shipX == enemy2X) {
+                moveEnemy2X = -1000000;
+              }
+            }
+            break;
+          }
+          if (count == 1) {
+            w = 0; h = 25;
+          } else if (count == 2){
+            w = 25; h = 0;
+          }
+      }
+
+      function moveThing() {
+        shipX += moveX; shipY += moveY;
+        enemy1X += moveEnemy1X; enemy1Y += moveEnemy1Y;
+        enemy2X += moveEnemy2X; enemy2Y += moveEnemy2Y;
+      }
+
+      function finish() {
+        if (enemy1X == islandX && enemy1Y == islandY) {
+          moveEnemy1X = -1000000;
+        }
+        if (enemy2X == islandX && enemy2Y == islandY) {
+          moveEnemy2X = -1000000;
+        }
+        if (enemy1X < 0 && enemy2X < 0) {
+          alert("You win!!");
+        }
+        if (enemy1X == shipX && enemy1Y == shipY || enemy2X == shipX && enemy2Y == shipY || islandX == shipX && islandY == shipY) {
+          alert("You lose!!");
+        }
+      }
+
+
+    </script>
+  </body>
+</html>
