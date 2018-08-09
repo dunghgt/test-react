@@ -39,6 +39,7 @@
         setInterval(function() {
           finish();
           moveThing();
+          border();
           drawThing();
           moveX = 0; moveY = 0;
           moveEnemy1X = 0; moveEnemy1Y = 0;
@@ -151,6 +152,18 @@
         }
       }
 
+      function border() {
+        if (shipX < 0) {
+          shipX = 0;
+        }else if (shipX > 4) {
+          shipX = 4;
+        }
+        if (shipY < 0) {
+          shipY = 0;
+        }else if (shipY > 4) {
+          shipY = 4;
+        }
+      }
 
     </script>
   </body>
